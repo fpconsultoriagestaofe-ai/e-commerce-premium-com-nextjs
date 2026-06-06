@@ -4,12 +4,20 @@ import { ArrowRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
-import { siteSettings, getFeaturedCategories, getFeaturedProducts, getNewProducts } from "@/lib/data"
+import { siteSettings } from "@/lib/data"
+import { getFeaturedCategories, getFeaturedProducts, getNewProducts, getSiteSettings } from "@/lib/queries"
 
-export default function HomePage() {
-  const featuredCategories = getFeaturedCategories()
-  const featuredProducts = getFeaturedProducts()
-  const newProducts = getNewProducts()
+export default async function HomePage() {
+  const [featuredCategories, featuredProducts, newProducts, settings] = await Promise.all([
+    getFeaturedCategories(),
+    getFeaturedProducts(),
+    getNewProducts(),
+    getSiteSettings(),
+  ])
+
+  const heroImage = settings?.bannerUrl || siteSettings.heroImage
+  const heroTitle = settings?.bannerTitle || siteSettings.heroTitle
+  const heroSubtitle = settings?.bannerSubtitle || siteSettings.heroSubtitle
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -19,7 +27,7 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="relative h-[100svh] flex items-center justify-center">
           <Image
-            src={siteSettings.heroImage}
+            src={heroImage || "/placeholder.svg"}
             alt="Hero"
             fill
             className="object-cover"
@@ -29,10 +37,10 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-black/30" />
           <div className="relative z-10 text-center text-white px-4 max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-[0.2em] mb-4 text-balance">
-              {siteSettings.heroTitle}
+              {heroTitle}
             </h1>
             <p className="text-base md:text-lg font-light tracking-wide mb-8 text-white/90">
-              {siteSettings.heroSubtitle}
+              {heroSubtitle}
             </p>
             <Link
               href="/produtos"

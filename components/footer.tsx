@@ -1,8 +1,13 @@
 import Link from "next/link"
 import { Instagram, Facebook, Twitter } from "lucide-react"
-import { siteSettings, categories } from "@/lib/data"
+import { siteSettings } from "@/lib/data"
+import { getCategories, getSiteSettings } from "@/lib/queries"
 
-export function Footer() {
+export async function Footer() {
+  const [categories, settings] = await Promise.all([getCategories(), getSiteSettings()])
+  const instagram = settings?.instagram || siteSettings.socialLinks.instagram
+  const facebook = settings?.facebook || siteSettings.socialLinks.facebook
+  const twitter = settings?.twitter || siteSettings.socialLinks.twitter
   return (
     <footer className="bg-foreground text-background">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -99,9 +104,9 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-background/20 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-background/50">{siteSettings.footerText}</p>
           <div className="flex items-center gap-4">
-            {siteSettings.socialLinks.instagram && (
+            {instagram && (
               <a
-                href={siteSettings.socialLinks.instagram}
+                href={instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-background/50 hover:text-background transition-colors"
@@ -110,9 +115,9 @@ export function Footer() {
                 <span className="sr-only">Instagram</span>
               </a>
             )}
-            {siteSettings.socialLinks.facebook && (
+            {facebook && (
               <a
-                href={siteSettings.socialLinks.facebook}
+                href={facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-background/50 hover:text-background transition-colors"
@@ -121,9 +126,9 @@ export function Footer() {
                 <span className="sr-only">Facebook</span>
               </a>
             )}
-            {siteSettings.socialLinks.twitter && (
+            {twitter && (
               <a
-                href={siteSettings.socialLinks.twitter}
+                href={twitter}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-background/50 hover:text-background transition-colors"

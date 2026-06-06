@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { useCartStore } from "@/lib/store"
-import { categories } from "@/lib/data"
+import type { Category } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import useSWR from "swr"
+
+const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -16,6 +19,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isMounted, setIsMounted] = useState(false)
   const cartItems = useCartStore((state) => state.getTotalItems())
+  const { data: categories = [] } = useSWR<Category[]>("/api/categories", fetcher)
 
   useEffect(() => {
     setIsMounted(true)

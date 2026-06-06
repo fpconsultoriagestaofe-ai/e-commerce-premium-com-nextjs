@@ -1,7 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
-import { products, categories, getCategoryBySlug, getProductsByCategory } from "@/lib/data"
+import { getCategories, getCategoryBySlug, getProductsByCategory } from "@/lib/queries"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { notFound } from "next/navigation"
@@ -11,6 +11,7 @@ interface CategoryPageProps {
 }
 
 export async function generateStaticParams() {
+  const categories = await getCategories()
   return categories.map((category) => ({
     categoria: category.slug,
   }))
@@ -18,13 +19,13 @@ export async function generateStaticParams() {
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { categoria } = await params
-  const category = getCategoryBySlug(categoria)
+  const category = await getCategoryBySlug(categoria)
 
   if (!category) {
     notFound()
   }
 
-  const categoryProducts = getProductsByCategory(categoria)
+  const categoryProducts = await getProductsByCategory(categoria)
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -1,11 +1,13 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
-import { products, categories } from "@/lib/data"
+import { getProducts, getCategories } from "@/lib/queries"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const [products, categories] = await Promise.all([getProducts(), getCategories()])
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
